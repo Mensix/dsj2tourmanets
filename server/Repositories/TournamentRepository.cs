@@ -28,6 +28,7 @@ public class TournamentRepository : ITournamentRepository
         return _context.Tournaments
             .Include(x => x.Hill)
             .Include(x => x.Settings)
+            .Include(x => x.CreatedBy)
             .OrderByDescending(x => x.StartDate)
             .Where(x => ((DateTime)x.StartDate).ToUniversalTime() <= DateTime.UtcNow && x.EndDate.ToUniversalTime() >= DateTime.UtcNow)
             .ToList();
@@ -38,6 +39,7 @@ public class TournamentRepository : ITournamentRepository
         return _context.Tournaments
             .Include(x => x.Hill)
             .Include(x => x.Settings)
+            .Include(x => x.CreatedBy)
             .FirstOrDefault(x => x.Code == tournamentCode);
     }
 

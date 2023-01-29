@@ -9,6 +9,7 @@ public class Tournament
     [JsonIgnore]
     public int Id { get; set; }
 
+    [Required]
     public User CreatedBy { get; set; }
 
     public TournamentSettings Settings { get; set; }
