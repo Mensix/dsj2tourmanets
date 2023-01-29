@@ -48,7 +48,7 @@ Posts a jump to the matching tournament.
 
 Deletes jump by given replay code.
 
-**HTTP GET** ```/tournament/current```
+**HTTP GET** ```/tournament```
 
 Returns current tournament(s) info.
 
@@ -72,6 +72,46 @@ Returns current tournament(s) info.
     "isFinished": false
   }
 ]
+```
+
+**HTTP GET** ```/tournament/{tournamentCode}```
+
+Returns tournament info by given code.
+
+```json
+{
+  "createdBy": {
+    "userId": 310443068937732108,
+    "username": "Mensix#2002"
+  },
+  "settings": {
+    "liveBoard": true
+  },
+  "hill": {
+    "name": "Finland K105"
+  },
+  "code": "9925bc",
+  "createdDate": "2023-01-29T17:42:07.5075Z",
+  "startDate": "2023-01-29T17:42:09.751386Z",
+  "endDate": "2023-01-30T10:17:11.268Z",
+  "isFinished": false,
+  "jumps": [
+    {
+      "place": 1,
+      "user": {
+        "userId": 310443068937732108,
+        "username": "Mensix#2002"
+      },
+      "replayCode": "MrSqSAMPUlTQ",
+      "player": "Trening",
+      "length": 70.22,
+      "crash": false,
+      "points": 41.0,
+      "date": "2023-01-29",
+      "tournamentCode": "9925bc"
+    }
+  ]
+}
 ```
 
 **HTTP POST** ```/tournament```

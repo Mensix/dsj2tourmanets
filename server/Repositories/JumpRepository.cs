@@ -5,7 +5,6 @@ namespace Dsj2TournamentsServer.Repositories;
 public interface IJumpRepository
 {
     Jump Get(string replayCode);
-    void Post(Jump jump);
     void Delete(string replayCode);
     bool AnyBetterThan(Jump jump);
 }
@@ -13,23 +12,14 @@ public interface IJumpRepository
 public class JumpRepository : IJumpRepository
 {
     private readonly Dsj2TournamentsServerDbContext _context;
-    private readonly ITournamentRepository _tournamentRepository;
-    public JumpRepository(Dsj2TournamentsServerDbContext context, ITournamentRepository tournamentRepository)
+    public JumpRepository(Dsj2TournamentsServerDbContext context)
     {
         _context = context;
-        _tournamentRepository = tournamentRepository;
     }
 
     public Jump Get(string replayCode)
     {
         return _context.Jumps.FirstOrDefault(x => x.ReplayCode == replayCode);
-    }
-
-    public void Post(Jump jump)
-    {
-        var foundTournament = _tournamentRepository.Get(jump.TournamentCode);
-        (foundTournament.Jumps ??= new()).Add(jump);
-        _context.SaveChanges();
     }
 
     public void Delete(string replayCode)

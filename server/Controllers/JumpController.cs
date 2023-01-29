@@ -103,7 +103,7 @@ public class JumpController : ControllerBase
         jump.TournamentCode = foundTournamentCode;
         var foundTournament = _tournamentService.Get(jump.TournamentCode);
 
-        _jumpService.Post(jump);
+        _tournamentService.Post(jump);
         _logger.LogInformation("Jump was succesfully post to tournament {code} by {nickname}: {jump}", jump.TournamentCode, jump.User.Username, JsonSerializer.Serialize(jump));
         return Ok(jump);
     }

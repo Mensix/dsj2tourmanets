@@ -19,39 +19,38 @@ public class TournamentController : ControllerBase
     }
 
     [HttpGet]
-    [Route("current")]
-    public IActionResult GetCurrent()
+    [Route("")]
+    [Route("{code}")]
+    public IActionResult Get(string code)
     {
-        var tournament = _tournamentService.GetCurrent();
-        if (tournament == null)
+        if (code == null)
         {
-            _logger.LogError("Getting current tournament was requested, wasn't found");
-            return NotFound(new ApiError() { Message = "No tournament is currently held." });
+            var tournaments = _tournamentService.GetCurrent();
+            if (tournaments == null)
+            {
+                _logger.LogError("Getting current tournament was requested, wasn't found");
+                return NotFound(new ApiError() { Message = "No tournaments are currently held." });
+            }
+
+            _logger.LogInformation("Getting current tournaments was requested: {tournaments}", JsonSerializer.Serialize(tournaments));
+            return Ok(tournaments);
         }
 
-        _logger.LogInformation("Getting current tournament was requested: {tournament}", JsonSerializer.Serialize(tournament));
-        return Ok(tournament);
-    }
-
-    [HttpGet]
-    [Route("{code}/results")]
-    public IActionResult GetResults(string code)
-    {
         var tournament = _tournamentService.Get(code);
         if (tournament == null)
         {
-            _logger.LogError("Getting tournament results with {code} was requested, weren't found", code);
+            _logger.LogError("Getting tournament info with {code} was requested, weren't found", code);
             return NotFound(new ApiError() { Message = "No tournament with given code was found." });
         }
 
         if (tournament.EndDate.ToUniversalTime() > DateTime.UtcNow && !tournament.Settings.LiveBoard)
         {
-            _logger.LogError("Getting tournament results with {code} was requested, can't be fetched yet", code);
-            return NotFound(new ApiError() { Message = "Tournament results aren't available at the moment." });
+            _logger.LogError("Getting tournament info with {code} was requested, can't be fetched yet", code);
+            return NotFound(new ApiError() { Message = "Tournament info aren't available at the moment." });
         }
 
-        _logger.LogInformation("Getting tournament results with {code} was requested, were found", code);
-        return Ok(_tournamentService.GetResults(code));
+        _logger.LogInformation("Getting tournament info with {code} was requested, were found", code);
+        return Ok(_tournamentService.Get(code));
     }
 
     [HttpPost]

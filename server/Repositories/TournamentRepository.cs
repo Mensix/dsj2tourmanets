@@ -8,8 +8,9 @@ public interface ITournamentRepository
 {
     Tournament Get(string tornamentCode);
     List<Tournament> GetCurrent();
-    Tournament GetResults(string tournamentCode);
+    List<Jump> GetJumps(string tournamentCode);
     void Post(Tournament tournament);
+    void Post(Jump jump);
     void Delete(string tournamentCode);
 }
 
@@ -24,41 +25,62 @@ public class TournamentRepository : ITournamentRepository
 
     public Tournament Get(string tournamentCode)
     {
-        return _context.Tournaments
+        var foundTournament = _context.Tournaments
             .Include(x => x.Hill)
             .Include(x => x.Settings)
             .Include(x => x.CreatedBy)
             .FirstOrDefault(x => x.Code == tournamentCode);
+
+        if (foundTournament.Settings.LiveBoard || foundTournament.IsFinished)
+        {
+            foundTournament.Jumps = GetJumps(tournamentCode);
+        }
+
+        return foundTournament;
     }
 
     public List<Tournament> GetCurrent()
     {
-        return _context.Tournaments
+        var foundTournaments = _context.Tournaments
             .Include(x => x.Hill)
             .Include(x => x.Settings)
             .Include(x => x.CreatedBy)
             .OrderByDescending(x => x.StartDate)
             .Where(x => ((DateTime)x.StartDate).ToUniversalTime() <= DateTime.UtcNow && x.EndDate.ToUniversalTime() >= DateTime.UtcNow)
             .ToList();
+
+        foreach (var tournament in foundTournaments)
+        {
+            if (tournament.Settings.LiveBoard || tournament.IsFinished)
+            {
+                tournament.Jumps = GetJumps(tournament.Code);
+            }
+        }
+
+        return foundTournaments;
     }
 
-    public Tournament GetResults(string tournamentCode)
+    public List<Jump> GetJumps(string tournamentCode)
     {
-        var foundTournament = Get(tournamentCode);
-        foundTournament.Jumps = _context.Jumps
+        return _context.Jumps
             .Include(x => x.User)
+            .OrderByDescending(x => x.Points)
             .Where(x => x.TournamentCode.ToLower() == tournamentCode.ToLower())
             .GroupBy(x => x.User.UserId)
             .Select(x => x.OrderByDescending(y => y.Points).First())
-            .OrderByDescending(x => x.Points)
             .ToList();
-
-        return foundTournament;
     }
 
     public void Post(Tournament tournament)
     {
         _context.Tournaments.Add(tournament);
+        _context.SaveChanges();
+    }
+
+    public void Post(Jump jump)
+    {
+        var foundTournament = Get(jump.TournamentCode);
+        (foundTournament.Jumps ??= new()).Add(jump);
         _context.SaveChanges();
     }
 

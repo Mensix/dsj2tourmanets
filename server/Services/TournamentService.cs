@@ -9,8 +9,9 @@ public interface ITournamentService
     void Delete(string tournamentCode);
     Tournament Get(string tournamentCode);
     List<Tournament> GetCurrent();
-    Tournament GetResults(string tournamentCode);
+    void Post(Jump jump);
     void Post(Tournament tournament);
+    List<Jump> GetPlaces(List<Jump> jumps);
 }
 
 public class TournamentService : ITournamentService
@@ -21,37 +22,34 @@ public class TournamentService : ITournamentService
         _tournamentRepository = tournamentRepository;
     }
 
-    public List<Tournament> GetCurrent()
-    {
-        return _tournamentRepository.GetCurrent();
-    }
-
     public Tournament Get(string tournamentCode)
     {
-        return _tournamentRepository.Get(tournamentCode);
+        var tournament = _tournamentRepository.Get(tournamentCode);
+        tournament.Jumps = GetPlaces(tournament.Jumps);
+
+        return tournament;
     }
 
-    public Tournament GetResults(string tournamentCode)
+    public List<Tournament> GetCurrent()
     {
-        var results = _tournamentRepository.GetResults(tournamentCode);
-        var currentPlace = 1;
+        var tournaments = _tournamentRepository.GetCurrent();
 
-        if (results.Jumps.Count > 0)
+        foreach (var tournament in tournaments)
         {
-            results.Jumps[0].Place = currentPlace;
-            for (int i = 1; i < results.Jumps.Count; i++)
+            if (tournament.IsFinished || tournament.Settings.LiveBoard)
             {
-                if (results.Jumps[i].Points < results.Jumps[i - 1].Points)
-                {
-                    currentPlace++;
-                }
-
-                results.Jumps[i].Place = currentPlace;
+                tournament.Jumps = GetPlaces(tournament.Jumps);
             }
         }
 
-        return results;
+        return tournaments;
     }
+
+    public void Post(Jump jump)
+    {
+        _tournamentRepository.Post(jump);
+    }
+
 
     public void Post(Tournament tournament)
     {
@@ -61,5 +59,26 @@ public class TournamentService : ITournamentService
     public void Delete(string tournamentCode)
     {
         _tournamentRepository.Delete(tournamentCode);
+    }
+
+    public List<Jump> GetPlaces(List<Jump> jumps)
+    {
+        var currentPlace = 1;
+
+        if (jumps.Count > 0)
+        {
+            jumps[0].Place = currentPlace;
+            for (int i = 1; i < jumps.Count; i++)
+            {
+                if (jumps[i].Points < jumps[i - 1].Points)
+                {
+                    currentPlace++;
+                }
+
+                jumps[i].Place = currentPlace;
+            }
+        }
+
+        return jumps;
     }
 }

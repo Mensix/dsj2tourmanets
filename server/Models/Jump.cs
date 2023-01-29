@@ -9,7 +9,6 @@ public class Jump
     [JsonIgnore]
     public int Id { get; set; }
 
-    [JsonIgnore]
     [NotMapped]
     public int Place { get; set; }
 

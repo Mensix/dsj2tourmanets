@@ -6,7 +6,6 @@ namespace Dsj2TournamentsServer.Services;
 public interface IJumpService
 {
     Jump Get(string replayCode);
-    void Post(Jump jump);
     void Delete(string replayCode);
     bool AlreadyExists(string replayCode);
     bool AnyBetterThan(Jump jump);
@@ -26,11 +25,6 @@ public class JumpService : IJumpService
     public Jump Get(string replayCode)
     {
         return _jumpRepository.Get(replayCode);
-    }
-
-    public void Post(Jump jump)
-    {
-        _jumpRepository.Post(jump);
     }
 
     public void Delete(string replayCode)
