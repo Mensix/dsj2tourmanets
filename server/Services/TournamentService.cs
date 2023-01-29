@@ -25,7 +25,10 @@ public class TournamentService : ITournamentService
     public Tournament Get(string tournamentCode)
     {
         var tournament = _tournamentRepository.Get(tournamentCode);
-        tournament.Jumps = GetPlaces(tournament.Jumps);
+        if (tournament != null && (tournament.Settings.LiveBoard || tournament.IsFinished))
+        {
+            tournament.Jumps = GetPlaces(tournament.Jumps);
+        }
 
         return tournament;
     }

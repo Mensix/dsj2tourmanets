@@ -43,12 +43,6 @@ public class TournamentController : ControllerBase
             return NotFound(new ApiError() { Message = "No tournament with given code was found." });
         }
 
-        if (tournament.EndDate.ToUniversalTime() > DateTime.UtcNow && !tournament.Settings.LiveBoard)
-        {
-            _logger.LogError("Getting tournament info with {code} was requested, can't be fetched yet", code);
-            return NotFound(new ApiError() { Message = "Tournament info aren't available at the moment." });
-        }
-
         _logger.LogInformation("Getting tournament info with {code} was requested, were found", code);
         return Ok(_tournamentService.Get(code));
     }

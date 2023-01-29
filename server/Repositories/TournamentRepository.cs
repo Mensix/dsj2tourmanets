@@ -31,9 +31,12 @@ public class TournamentRepository : ITournamentRepository
             .Include(x => x.CreatedBy)
             .FirstOrDefault(x => x.Code == tournamentCode);
 
-        if (foundTournament.Settings.LiveBoard || foundTournament.IsFinished)
+        if (foundTournament != null)
         {
-            foundTournament.Jumps = GetJumps(tournamentCode);
+            if (foundTournament.Settings.LiveBoard || foundTournament.IsFinished)
+            {
+                foundTournament.Jumps = GetJumps(tournamentCode);
+            }
         }
 
         return foundTournament;

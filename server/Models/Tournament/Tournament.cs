@@ -12,7 +12,7 @@ public class Tournament
     [Required]
     public User CreatedBy { get; set; }
 
-    public TournamentSettings Settings { get; set; }
+    public TournamentSettings Settings { get; set; } = new() { LiveBoard = false };
 
     [Required]
     public Hill Hill { get; set; }
@@ -21,10 +21,9 @@ public class Tournament
 
     public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
 
-    public DateTime? StartDate { get; set; }
+    public DateTime? StartDate { get; set; } = DateTime.UtcNow.AddMinutes(1);
 
-    [Required]
-    public DateTime EndDate { get; set; }
+    public DateTime EndDate { get; set; } = DateTime.UtcNow.AddHours(1);
 
     [NotMapped]
     public bool IsFinished => DateTime.UtcNow > EndDate.ToUniversalTime();
