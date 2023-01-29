@@ -6,12 +6,11 @@ namespace Dsj2TournamentsServer.Repositories;
 
 public interface ITournamentRepository
 {
-    void Delete(string tournamentCode);
     Tournament Get(string tornamentCode);
     List<Tournament> GetCurrent();
     Tournament GetResults(string tournamentCode);
     void Post(Tournament tournament);
-    void PostJump(Jump jump);
+    void Delete(string tournamentCode);
 }
 
 public class TournamentRepository : ITournamentRepository
@@ -23,6 +22,15 @@ public class TournamentRepository : ITournamentRepository
         _context = context;
     }
 
+    public Tournament Get(string tournamentCode)
+    {
+        return _context.Tournaments
+            .Include(x => x.Hill)
+            .Include(x => x.Settings)
+            .Include(x => x.CreatedBy)
+            .FirstOrDefault(x => x.Code == tournamentCode);
+    }
+
     public List<Tournament> GetCurrent()
     {
         return _context.Tournaments
@@ -32,15 +40,6 @@ public class TournamentRepository : ITournamentRepository
             .OrderByDescending(x => x.StartDate)
             .Where(x => ((DateTime)x.StartDate).ToUniversalTime() <= DateTime.UtcNow && x.EndDate.ToUniversalTime() >= DateTime.UtcNow)
             .ToList();
-    }
-
-    public Tournament Get(string tournamentCode)
-    {
-        return _context.Tournaments
-            .Include(x => x.Hill)
-            .Include(x => x.Settings)
-            .Include(x => x.CreatedBy)
-            .FirstOrDefault(x => x.Code == tournamentCode);
     }
 
     public Tournament GetResults(string tournamentCode)
@@ -60,13 +59,6 @@ public class TournamentRepository : ITournamentRepository
     public void Post(Tournament tournament)
     {
         _context.Tournaments.Add(tournament);
-        _context.SaveChanges();
-    }
-
-    public void PostJump(Jump jump)
-    {
-        var foundTournament = Get(jump.TournamentCode);
-        (foundTournament.Jumps ??= new()).Add(jump);
         _context.SaveChanges();
     }
 

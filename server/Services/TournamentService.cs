@@ -6,12 +6,11 @@ namespace Dsj2TournamentsServer.Services;
 
 public interface ITournamentService
 {
-    void Delete(string code);
-    Tournament Get(string code);
+    void Delete(string tournamentCode);
+    Tournament Get(string tournamentCode);
     List<Tournament> GetCurrent();
-    Tournament GetResults(string code);
+    Tournament GetResults(string tournamentCode);
     void Post(Tournament tournament);
-    void PostJump(Jump jump);
 }
 
 public class TournamentService : ITournamentService
@@ -27,14 +26,14 @@ public class TournamentService : ITournamentService
         return _tournamentRepository.GetCurrent();
     }
 
-    public Tournament Get(string code)
+    public Tournament Get(string tournamentCode)
     {
-        return _tournamentRepository.Get(code);
+        return _tournamentRepository.Get(tournamentCode);
     }
 
-    public Tournament GetResults(string code)
+    public Tournament GetResults(string tournamentCode)
     {
-        var results = _tournamentRepository.GetResults(code);
+        var results = _tournamentRepository.GetResults(tournamentCode);
         var currentPlace = 1;
 
         if (results.Jumps.Count > 0)
@@ -59,13 +58,8 @@ public class TournamentService : ITournamentService
         _tournamentRepository.Post(tournament);
     }
 
-    public void PostJump(Jump jump)
+    public void Delete(string tournamentCode)
     {
-        _tournamentRepository.PostJump(jump);
-    }
-
-    public void Delete(string code)
-    {
-        _tournamentRepository.Delete(code);
+        _tournamentRepository.Delete(tournamentCode);
     }
 }

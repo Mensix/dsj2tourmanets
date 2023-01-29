@@ -25,22 +25,23 @@ public class JumpController : ControllerBase
     }
 
     [HttpGet]
-    [Route("{code}")]
-    public async Task<IActionResult> Get(string code)
+    [Route("{replayCode}")]
+    public async Task<IActionResult> Get(string replayCode)
     {
-        if(code.Length != 12) {
-            _logger.LogError("Unable to find jump with {code} replay code.", code);
+        if (replayCode.Length != 12)
+        {
+            _logger.LogError("Unable to find jump with {replayCode} replay code.", replayCode);
             return NotFound(new ApiError() { Message = "Jump with given replay code doesn't exists." });
         }
 
-        var jump = await _replayService.GetJump(code, null);
+        var jump = await _replayService.GetJump(replayCode, null);
         if (jump == null)
         {
-            _logger.LogError("Unable to find jump with {code} replay code.", code);
+            _logger.LogError("Unable to find jump with {code} replay code.", replayCode);
             return NotFound(new ApiError() { Message = "Jump with given replay code doesn't exists." });
         }
 
-        _logger.LogInformation("Jump with replay code {code} was found: {jump}", code, JsonSerializer.Serialize(jump));
+        _logger.LogInformation("Jump with replay code {code} was found: {jump}", replayCode, JsonSerializer.Serialize(jump));
         return Ok(jump);
     }
 
@@ -100,10 +101,25 @@ public class JumpController : ControllerBase
         }
 
         jump.TournamentCode = foundTournamentCode;
-
         var foundTournament = _tournamentService.Get(jump.TournamentCode);
-        _tournamentService.PostJump(jump);
+
+        _jumpService.Post(jump);
         _logger.LogInformation("Jump was succesfully post to tournament {code} by {nickname}: {jump}", jump.TournamentCode, jump.User.Username, JsonSerializer.Serialize(jump));
         return Ok(jump);
+    }
+
+    [HttpDelete]
+    [Route("{replayCode}")]
+    public async Task<IActionResult> Delete(string replayCode)
+    {
+        if (replayCode.Length != 12)
+        {
+            _logger.LogError("Unable to delete jump with {replayCode} replay code.", replayCode);
+            return NotFound(new ApiError() { Message = "Jump with given replay code doesn't exists." });
+        }
+
+        _jumpService.Delete(replayCode);
+        _logger.LogInformation("Jump with replay code {replayCode} was deleted.", replayCode);
+        return Ok(replayCode);
     }
 }

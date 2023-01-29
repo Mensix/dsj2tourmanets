@@ -30,6 +30,24 @@ Returns scraped jump data from the Mediamond server, returns error if not found.
 }
 ```
 
+**HTTP POST** ```/jump```
+
+Posts a jump to the matching tournament.
+
+```json
+{
+  "user": {
+    "userId": 310443068937732108,
+    "username": "Mensix#2002"
+  },
+  "replayCode": "acyhRgcUxCsQ",
+}
+```
+
+**HTTP DELETE** ```/jump/{replayCode}```
+
+Deletes jump by given replay code.
+
 **HTTP GET** ```/tournament/current```
 
 Returns current tournament(s) info.
@@ -77,7 +95,7 @@ Creates new tournament, returns error if dates are invalid.
 }
 ```
 
-**HTTP DELETE** ```/tournament/{code}```
+**HTTP DELETE** ```/tournament/{tournamentCode}```
 
 Deletes tournament with given code, an user body is required. Returns nothing.
 

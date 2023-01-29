@@ -94,27 +94,27 @@ public class TournamentController : ControllerBase
     }
 
     [HttpDelete]
-    [Route("{code}")]
-    public IActionResult Delete(string code, [FromBody] User user)
+    [Route("{tournamentCode}")]
+    public IActionResult Delete(string tournamentCode, [FromBody] User user)
     {
-        Tournament foundTournament = _tournamentService.Get(code);
+        Tournament foundTournament = _tournamentService.Get(tournamentCode);
         if (user.Equals(foundTournament.CreatedBy))
         {
             if (foundTournament != null)
             {
-                _tournamentService.Delete(code);
-                _logger.LogInformation("Tournament with code {code} was deleted.", code);
+                _tournamentService.Delete(tournamentCode);
+                _logger.LogInformation("Tournament with code {tournamentCode} was deleted.", tournamentCode);
                 return NoContent();
             }
             else
             {
-                _logger.LogError("Unable to delete tournament with {code} code, doesn't exist.", code);
+                _logger.LogError("Unable to delete tournament with {tournamentCode} code, doesn't exist.", tournamentCode);
                 return NotFound(new ApiError() { Message = "No such tournament exists." });
             }
         }
         else
         {
-            _logger.LogError("Unable to delete tournament with {code} code, authorization error.", code);
+            _logger.LogError("Unable to delete tournament with {tournamentCode} code, authorization error.", tournamentCode);
             return NotFound(new ApiError() { Message = "Authorization failed." });
         }
     }
