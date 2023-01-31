@@ -21,8 +21,16 @@ public class TournamentController : ControllerBase
     [HttpGet]
     [Route("")]
     [Route("{code}")]
-    public IActionResult Get(string code)
+    public IActionResult Get(string code, [FromQuery]  bool? anyCurrent)
     {
+        Console.WriteLine(anyCurrent);
+        if (anyCurrent == true)
+        {
+            var result = _tournamentService.AnyCurrent();
+            _logger.LogInformation("Getting any current tournament was requested, result: {anyCurrent}", anyCurrent);
+            return Ok(result);
+        }
+
         if (code == null)
         {
             var tournaments = _tournamentService.GetCurrent();
@@ -45,6 +53,15 @@ public class TournamentController : ControllerBase
 
         _logger.LogInformation("Getting tournament info with {code} was requested, were found", code);
         return Ok(_tournamentService.Get(code));
+    }
+
+    [HttpGet]
+    [Route("current")]
+    public IActionResult GetAnyCurrent()
+    {
+        var anyCurrent = _tournamentService.AnyCurrent();
+        _logger.LogInformation("Getting any current tournament was requested, result: {anyCurrent}", anyCurrent);
+        return Ok(anyCurrent);
     }
 
     [HttpPost]

@@ -50,7 +50,7 @@ Deletes jump by given replay code.
 
 **HTTP GET** ```/tournament```
 
-Returns current tournament(s) info.
+Returns current tournament(s) info. If ```anyCurrent``` is set to ```true```, returns boolean whether any tournament is currently held.
 
 ```json
 [

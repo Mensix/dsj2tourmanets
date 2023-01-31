@@ -12,6 +12,7 @@ public interface ITournamentRepository
     void Post(Tournament tournament);
     void Post(Jump jump);
     void Delete(string tournamentCode);
+    bool AnyCurrent();
 }
 
 public class TournamentRepository : ITournamentRepository
@@ -92,5 +93,11 @@ public class TournamentRepository : ITournamentRepository
         _context.Jumps.RemoveRange(_context.Jumps.Where(x => x.TournamentCode.ToLower() == tournamentCode.ToLower()));
         _context.Tournaments.Remove(_context.Tournaments.FirstOrDefault(x => x.Code.ToLower() == tournamentCode.ToLower()));
         _context.SaveChanges();
+    }
+
+    public bool AnyCurrent()
+    {
+        return _context.Tournaments
+            .Any(x => ((DateTime)x.StartDate).ToUniversalTime() <= DateTime.UtcNow && x.EndDate.ToUniversalTime() >= DateTime.UtcNow);
     }
 }

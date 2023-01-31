@@ -110,7 +110,7 @@ public class JumpController : ControllerBase
 
     [HttpDelete]
     [Route("{replayCode}")]
-    public async Task<IActionResult> Delete(string replayCode)
+    public IActionResult Delete(string replayCode)
     {
         if (replayCode.Length != 12)
         {

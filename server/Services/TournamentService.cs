@@ -11,6 +11,7 @@ public interface ITournamentService
     List<Tournament> GetCurrent();
     void Post(Jump jump);
     void Post(Tournament tournament);
+    bool AnyCurrent();
     List<Jump> GetPlaces(List<Jump> jumps);
 }
 
@@ -62,6 +63,11 @@ public class TournamentService : ITournamentService
     public void Delete(string tournamentCode)
     {
         _tournamentRepository.Delete(tournamentCode);
+    }
+
+    public bool AnyCurrent()
+    {
+        return _tournamentRepository.AnyCurrent();
     }
 
     public List<Jump> GetPlaces(List<Jump> jumps)
