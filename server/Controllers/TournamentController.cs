@@ -48,7 +48,7 @@ public class TournamentController : ControllerBase
         if (tournament == null)
         {
             _logger.LogError("Getting tournament info with {code} was requested, weren't found", code);
-            return NotFound(new ApiError() { Message = "No tournament with given code was found." });
+            return NotFound(new ApiError() { Message = "No tournament with given code was found.", Input = tournament });
         }
 
         _logger.LogInformation("Getting tournament info with {code} was requested, were found", code);
@@ -72,30 +72,25 @@ public class TournamentController : ControllerBase
         if (foundTournament != null)
         {
             _logger.LogError("Unable to schedule tournament with code {code}: already exists", tournament.Code);
-            return BadRequest(new ApiError() { Message = "Tournament with given code already exists." });
+            return BadRequest(new ApiError() { Message = "Tournament with given code already exists.", Input = tournament });
         }
 
         if (tournament.StartDate is DateTime dt1 && dt1.ToUniversalTime() > tournament.EndDate.ToUniversalTime())
         {
             _logger.LogError("Unable to schedule tournament with code {code} - invalid date: {tournament}", tournament.Code, JsonSerializer.Serialize(tournament));
-            return BadRequest(new ApiError() { Message = "Tournament end date can't be earlier than start date." });
+            return BadRequest(new ApiError() { Message = "Tournament end date can't be earlier than start date.", Input = tournament });
         }
 
         if (tournament.StartDate is DateTime dt2 && dt2.ToUniversalTime() < DateTime.UtcNow)
         {
             _logger.LogError("Unable to schedule tournament with code {code} - invalid date: {tournament}", tournament.Code, JsonSerializer.Serialize(tournament));
-            return BadRequest(new ApiError() { Message = "Tournament start date can't be earlier than current date." });
+            return BadRequest(new ApiError() { Message = "Tournament start date can't be earlier than current date.", Input = tournament });
         }
 
         if (tournament.EndDate.ToUniversalTime() < DateTime.UtcNow)
         {
             _logger.LogError("Unable to schedule tournament with code {code} - invalid date: {tournament}", tournament.Code, JsonSerializer.Serialize(tournament));
-            return BadRequest(new ApiError() { Message = "Tournament end date can't be earlier than current date." });
-        }
-
-        if (tournament.StartDate == null)
-        {
-            tournament.StartDate = DateTime.UtcNow;
+            return BadRequest(new ApiError() { Message = "Tournament end date can't be earlier than current date.", Input = tournament });
         }
 
         _tournamentService.Post(tournament);
@@ -119,13 +114,13 @@ public class TournamentController : ControllerBase
             else
             {
                 _logger.LogError("Unable to delete tournament with {tournamentCode} code, doesn't exist.", tournamentCode);
-                return NotFound(new ApiError() { Message = "No such tournament exists." });
+                return NotFound(new ApiError() { Message = "No such tournament exists.", Input = tournamentCode });
             }
         }
         else
         {
             _logger.LogError("Unable to delete tournament with {tournamentCode} code, authorization error.", tournamentCode);
-            return NotFound(new ApiError() { Message = "Authorization failed." });
+            return NotFound(new ApiError() { Message = "Authorization failed.", Input = tournamentCode });
         }
     }
 }

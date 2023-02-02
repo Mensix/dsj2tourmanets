@@ -5,7 +5,7 @@ import { hillToFlag } from '../misc'
 
 export default function (schedule: Tournament) {
   return new EmbedBuilder()
-    .setColor('#0088FF')
+    .setColor('Blue')
     .setImage(`https://www.dsj2.com/media-kit/screenshot${Math.floor(Math.random() * 6) + 1}.png`)
     .setTitle('The tournament is now scheduled!')
     .setAuthor({ name: 'DSJ24.PL', iconURL: 'https://yt3.ggpht.com/ytc/AAUvwnhH_kewFZgwM1dBxKloPQ9KWyhPoAiGbZwDLNaa=s176-c-k-c0x00ffffff-no-rj-mo', url: 'https://dsj24.pl/' })

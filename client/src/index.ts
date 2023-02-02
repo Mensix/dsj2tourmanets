@@ -2,13 +2,15 @@ import consola from 'consola'
 import { Client, GatewayIntentBits, REST, Routes } from 'discord.js'
 import * as dotenv from 'dotenv'
 import { scheduleTournamentCommand } from './commands'
+import { sendJump } from './handlers'
 import { scheduleTournamentInteraction } from './interactions'
 dotenv.config()
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages] })
+const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] })
 const rest = new REST({ version: '10' }).setToken(process.env.BOT_TOKEN as string);
 (async () => {
   await rest.put(Routes.applicationGuildCommands(process.env.CLIENT_ID!, process.env.GUILD_ID!), { body: [scheduleTournamentCommand] })
+  consola.info('Discord commands registered.')
 })()
 
 client.on('interactionCreate', async (interaction) => {
@@ -17,6 +19,13 @@ client.on('interactionCreate', async (interaction) => {
 
   if (interaction.commandName === 'schedule')
     await scheduleTournamentInteraction(client, interaction)
+})
+
+client.on('messageCreate', async (message) => {
+  if (message.content.startsWith('https://replay.dsj2.com')) {
+    message.delete()
+    await sendJump(message)
+  }
 })
 
 client.login(process.env.BOT_TOKEN)

@@ -1,8 +1,9 @@
 import { parse } from 'date-fns'
 import type { Client, CommandInteraction } from 'discord.js'
 import { ApplicationCommandType, GuildScheduledEventEntityType, GuildScheduledEventPrivacyLevel } from 'discord.js'
+import type { FetchError } from 'ofetch'
 import { ofetch } from 'ofetch'
-import { tournamentEmbed } from '../embeds'
+import { errorEmbed, tournamentEmbed } from '../embeds'
 import type { Tournament, TournamentSettings } from '../interfaces'
 
 function getFixedDate(date: string | null) {
@@ -13,6 +14,8 @@ function getFixedDate(date: string | null) {
 }
 
 export default async function (client: Client, interaction: CommandInteraction) {
+  await interaction.deferReply()
+
   if (!interaction.isChatInputCommand())
     return
 
@@ -23,7 +26,7 @@ export default async function (client: Client, interaction: CommandInteraction) 
   const hill = options.getString('hill')!
   const allowedHills = 'Finland K105,Switzerland K170,Czech Republic K135,Belarus K220,Austria K70,USA K130,Latvia K165,Poland K80,Japan K210,Belgium K95,Iceland K190,England K50,Germany K120,Estonia K155,Norway K90,Australia K240,Ireland K125,Ukraine K60,Hungary K180,Sweden K140,Italy K230,Denmark K75,Slovakia K110,Canada K185,Lithuania K145,Kazakhstan K85,China K205,France K160,Holland K100,Russia K200,Korea K150,Slovenia K250'.split(',')
   if (!allowedHills.includes(hill)) {
-    await interaction.reply({ ephemeral: true, content: 'Invalid hill field value.' })
+    await interaction.editReply({ content: 'Invalid hill field value.' })
     return
   }
 
@@ -49,7 +52,7 @@ export default async function (client: Client, interaction: CommandInteraction) 
 
   try {
     const tournament = await ofetch<Tournament>('/tournament', { baseURL: process.env.BASE_URL!, method: 'POST', body: schedule, headers: { 'content-type': 'application/json' } })
-    await interaction.reply({ embeds: [tournamentEmbed(tournament)] })
+    await interaction.editReply({ embeds: [tournamentEmbed(tournament)] })
     await client.guilds.cache.get(interaction.guildId!)!.scheduledEvents.create({
       entityType: GuildScheduledEventEntityType.External,
       name: 'DSJ2 Mobile Tournament #dsj2-tournaments',
@@ -62,7 +65,6 @@ export default async function (client: Client, interaction: CommandInteraction) 
     })
   }
   catch (error) {
-    console.log(schedule)
-    await interaction.reply({ content: (error as any).message, ephemeral: true })
+    await interaction.editReply({ embeds: [errorEmbed(error as FetchError)] })
   }
 }

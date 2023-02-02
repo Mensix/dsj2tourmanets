@@ -6,6 +6,7 @@ interface Jump {
   user: User
   replayCode: string
   hill: Hill
+  player: string
   length: number
   crash: boolean
   points: number
@@ -13,4 +14,9 @@ interface Jump {
   tournamentCode: string
 }
 
-export { Jump }
+interface SentJump {
+  replayCode: string
+  user: User
+}
+
+export { Jump, SentJump }
