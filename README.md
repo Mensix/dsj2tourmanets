@@ -6,6 +6,24 @@ An attempt to create Discord based bot to host custom Deluxe Ski Jump 2 mobile v
 
 The project consists of two folders: server and client. The server is written in C# and uses ASP.NET Web Api backed by PostgreSQL database. The client will use Discord.js with TypeScript, backed by Node.js server.
 
+## Client
+
+### .env file
+
+```
+BOT_TOKEN=
+CLIENT_ID=
+GUILD_ID=
+BASE_URL=
+WORKING_CHANNEL=
+```
+
+BOT_TOKEN - Discord bot token
+CLIENT_ID - Discord client ID
+GUILD_ID - Discord guild ID
+BASE_URL - base URL of the server
+WORKING_CHANNEL - channel ID where the bot will create tournaments
+
 ## Server
 
 ### Endpoints
