@@ -31,7 +31,7 @@ public class JumpController : ControllerBase
         if (replayCode.Length != 12)
         {
             _logger.LogError("Unable to find jump with {replayCode} replay code.", replayCode);
-            return NotFound(new ApiError() { Message = "Jump with given replay code doesn't exists.", Input = replayCode });
+            return NotFound(new ApiError() { Message = "Jump with given replay code doesn't exist.", Input = replayCode });
         }
 
         Jump jump = await _replayService.GetJump(replayCode, null);
@@ -48,6 +48,12 @@ public class JumpController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Post(SentJump sentJump)
     {
+        if(sentJump.ReplayCode.Length != 12)
+        {
+            _logger.LogError("Unable to post jump, invalid replay code: {sentJump}", JsonSerializer.Serialize(sentJump));
+            return BadRequest(new ApiError() { Message = "Jump with given replay code doesn't exist.", Input = sentJump });
+        }
+
         List<Models.Tournament.Tournament> currentTournaments = _tournamentService.GetCurrent();
         if (currentTournaments == null)
         {
