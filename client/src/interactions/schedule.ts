@@ -1,5 +1,5 @@
 import { parse } from 'date-fns'
-import type { Client, CommandInteraction } from 'discord.js'
+import type { Client, CommandInteraction, ForumChannel } from 'discord.js'
 import { ApplicationCommandType, GuildScheduledEventEntityType, GuildScheduledEventPrivacyLevel } from 'discord.js'
 import type { FetchError } from 'ofetch'
 import { ofetch } from 'ofetch'
@@ -52,10 +52,14 @@ export default async function (client: Client, interaction: CommandInteraction) 
 
   try {
     const tournament = await ofetch<Tournament>('/tournament', { baseURL: process.env.BASE_URL!, method: 'POST', body: schedule, headers: { 'content-type': 'application/json' } })
-    await interaction.editReply({ embeds: [tournamentEmbed(tournament)] })
+
+    await (client.channels.cache.get(process.env.WORKING_CHANNEL!) as ForumChannel).threads.create({
+      name: `${tournament.hill.name} (${tournament.code})`,
+      message: { embeds: [tournamentEmbed(tournament)] },
+    })
     await client.guilds.cache.get(interaction.guildId!)!.scheduledEvents.create({
       entityType: GuildScheduledEventEntityType.External,
-      name: 'DSJ2 Mobile Tournament #dsj2-tournaments',
+      name: 'DSJ2 Mobile Tournament #dsj2tournaments',
       scheduledStartTime: tournament.startDate!,
       scheduledEndTime: tournament.endDate!,
       privacyLevel: GuildScheduledEventPrivacyLevel.GuildOnly,

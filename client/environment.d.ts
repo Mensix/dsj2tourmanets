@@ -5,6 +5,7 @@ declare global {
             GUILD_ID: string;
             BOT_TOKEN: string;
             BASE_URL: string;
+            WORKING_CHANNEL: string;
         }
     }
 }
