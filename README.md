@@ -4,7 +4,7 @@ An attempt to create Discord based bot to host custom Deluxe Ski Jump 2 mobile v
 
 ## Architecture
 
-The project consists of two folders: server and client. The server is written in C# and uses ASP.NET Web Api backed by PostgreSQL database. The client will use Discord.js with TypeScript, backed by Node.js server.
+The project consists of two folders: server and client. The server is written in C# and uses ASP.NET Web Api backed by PostgreSQL database. The client uses Discord.js with TypeScript, backed by Node.js server with the website built in Next.js.
 
 ## Client
 
