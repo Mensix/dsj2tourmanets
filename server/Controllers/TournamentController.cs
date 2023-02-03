@@ -48,7 +48,7 @@ public class TournamentController : ControllerBase
         if (tournament == null)
         {
             _logger.LogError("Getting tournament info with {code} was requested, weren't found", code);
-            return NotFound(new ApiError() { Message = "No tournament with given code was found.", Input = tournament });
+            return NotFound(new ApiError() { Message = "No tournament with given code was found.", Input = code });
         }
 
         _logger.LogInformation("Getting tournament info with {code} was requested, were found", code);

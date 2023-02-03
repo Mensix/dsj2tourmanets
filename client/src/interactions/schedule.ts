@@ -59,7 +59,7 @@ export default async function (client: Client, interaction: CommandInteraction) 
     })
     await client.guilds.cache.get(interaction.guildId!)!.scheduledEvents.create({
       entityType: GuildScheduledEventEntityType.External,
-      name: 'DSJ2 Mobile Tournament #dsj2tournaments',
+      name: `DSJ2 Mobile Tournament #dsj2tournaments (${tournament.code})`,
       scheduledStartTime: tournament.startDate!,
       scheduledEndTime: tournament.endDate!,
       privacyLevel: GuildScheduledEventPrivacyLevel.GuildOnly,

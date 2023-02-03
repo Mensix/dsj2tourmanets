@@ -1,3 +1,4 @@
+import resultsInteraction from './results'
 import scheduleTournamentInteraction from './schedule'
 
-export { scheduleTournamentInteraction }
+export { resultsInteraction, scheduleTournamentInteraction }
