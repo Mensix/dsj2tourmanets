@@ -23,7 +23,10 @@ export default async function (interaction: CommandInteraction, tournament: Tour
       description = 'You are seeing live scoreboard!'
   }
   else {
-    description = 'No results are available at the moment.'
+    if (!tournament.isFinished)
+      description = 'No results are available at the moment.'
+    else
+      description = 'No results are available.'
   }
 
   const embed = new EmbedBuilder()
@@ -35,7 +38,9 @@ export default async function (interaction: CommandInteraction, tournament: Tour
       { name: 'Code', value: tournament.code!, inline: true },
     )
     .setTimestamp()
-    .setFooter({ text: `Page: ${page}/${pagesCount}` })
+
+  if (pagesCount > 0)
+    embed.setFooter({ text: `Page: ${page}/${pagesCount}` })
 
   if (description)
     embed.setDescription(description)
@@ -43,9 +48,6 @@ export default async function (interaction: CommandInteraction, tournament: Tour
   if (paginatedJumps.length > 0) {
     embed.addFields(paginatedJumps)
       .toJSON()
-  }
-  else {
-    embed.setDescription('')
   }
 
   const previousPageButton = new ButtonBuilder()
@@ -100,7 +102,9 @@ export default async function (interaction: CommandInteraction, tournament: Tour
       { name: 'Code', value: tournament.code!, inline: true },
       ...paginatedJumps as EmbedField[],
     ])
-    embed.setFooter({ text: `Page: ${page}/${pagesCount}` })
+
+    if (pagesCount > 0)
+      embed.setFooter({ text: `Page: ${page}/${pagesCount}` })
 
     await i.deferUpdate()
     await i.editReply({
