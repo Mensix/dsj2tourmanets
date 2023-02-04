@@ -1,6 +1,7 @@
 using System.Text.Json;
 using Dsj2TournamentsApi.Models;
 using Dsj2TournamentsServer.Models;
+using Dsj2TournamentsServer.Models.Tournament;
 using Dsj2TournamentsServer.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -54,11 +55,11 @@ public class JumpController : ControllerBase
             return BadRequest(new ApiError() { Message = "Jump with given replay code doesn't exist.", Input = sentJump });
         }
 
-        List<Models.Tournament.Tournament> currentTournaments = _tournamentService.GetCurrent();
-        if (currentTournaments == null)
+        List<Tournament> currentTournaments = _tournamentService.GetCurrent();
+        if (currentTournaments.Count == 0)
         {
             _logger.LogError("Unable to post jump, no tournament is currently held.");
-            return NotFound(new ApiError() { Message = "No tournament is currently held." });
+            return NotFound(new ApiError() { Message = "No tournament is currently held.", Input = sentJump });
         }
 
         bool jumpAlreadyExists = _jumpService.AlreadyExists(sentJump.ReplayCode);
