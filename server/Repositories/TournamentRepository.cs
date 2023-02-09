@@ -68,10 +68,11 @@ public class TournamentRepository : ITournamentRepository
     {
         return _context.Jumps
             .Include(x => x.User)
-            .OrderByDescending(x => x.Points)
             .Where(x => x.TournamentCode.ToLower() == tournamentCode.ToLower())
             .GroupBy(x => x.User.UserId)
             .Select(x => x.OrderByDescending(y => y.Points).First())
+            .ToList()
+            .OrderByDescending(keySelector: x => x.Points)
             .ToList();
     }
 
