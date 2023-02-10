@@ -1,4 +1,4 @@
-import { SlashCommandBuilder } from '@discordjs/builders'
+import { SlashCommandBuilder } from 'discord.js'
 
 export default new SlashCommandBuilder()
   .setName('schedule')
@@ -14,7 +14,7 @@ export default new SlashCommandBuilder()
   )
   .addStringOption(option =>
     option.setName('end_date')
-      .setDescription('End date of tournament.')
+      .setDescription('End date of tournament.'),
   )
   .addBooleanOption(option =>
     option.setName('live_board')
