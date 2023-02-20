@@ -5,7 +5,7 @@ export default function (jump: Jump) {
   const output = new EmbedBuilder()
     .setColor('Blue')
     .setTitle(`${jump.user.username}, you have succesfully sent your jump!`)
-    .setAuthor({ name: 'DSJ24.PL', iconURL: 'https://yt3.ggpht.com/ytc/AAUvwnhH_kewFZgwM1dBxKloPQ9KWyhPoAiGbZwDLNaa=s176-c-k-c0x00ffffff-no-rj-mo', url: 'https://dsj24.pl/' })
+    .setAuthor({ name: 'DSJ24.PL', iconURL: `https://www.dsj2.com/media-kit/screenshot${~~(Math.random() * 6) + 1}.png`, url: 'https://dsj24.pl/' })
     .setDescription('See details of your jump below.')
     .addFields(
       { name: 'Hill', value: `${jump.hill.name}`, inline: true },

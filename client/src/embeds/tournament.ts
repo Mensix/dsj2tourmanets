@@ -8,7 +8,7 @@ export default function (schedule: Tournament) {
     .setColor('Blue')
     .setImage(`https://www.dsj2.com/media-kit/screenshot${Math.floor(Math.random() * 6) + 1}.png`)
     .setTitle('The tournament is now scheduled!')
-    .setAuthor({ name: 'DSJ24.PL', iconURL: 'https://yt3.ggpht.com/ytc/AAUvwnhH_kewFZgwM1dBxKloPQ9KWyhPoAiGbZwDLNaa=s176-c-k-c0x00ffffff-no-rj-mo', url: 'https://dsj24.pl/' })
+    .setAuthor({ name: 'DSJ24.PL', iconURL: `https://www.dsj2.com/media-kit/screenshot${~~(Math.random() * 6) + 1}.png`, url: 'https://dsj24.pl/' })
     .setDescription(`Participate in the tournament and do your best! The winner takes it all!\n
 • we play on **Deluxe Ski Jump 2 mobile version**
 • your player **should** finish with **${schedule.code}** to avoid conflicts

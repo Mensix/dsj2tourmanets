@@ -32,7 +32,7 @@ export default async function (interaction: CommandInteraction, tournament: Tour
   const embed = new EmbedBuilder()
     .setColor(Colors.Blue)
     .setTitle('Tournament results')
-    .setAuthor({ name: 'DSJ24.PL', iconURL: 'https://yt3.ggpht.com/ytc/AAUvwnhH_kewFZgwM1dBxKloPQ9KWyhPoAiGbZwDLNaa=s176-c-k-c0x00ffffff-no-rj-mo', url: 'https://dsj24.pl/' })
+    .setAuthor({ name: 'DSJ24.PL', iconURL: `https://www.dsj2.com/media-kit/screenshot${~~(Math.random() * 6) + 1}.png`, url: 'https://dsj24.pl/' })
     .addFields(
       { name: 'Hill', value: `${hillToFlag(tournament.hill.name)}  ${tournament.hill.name}`, inline: true },
       { name: 'Code', value: tournament.code!, inline: true },
