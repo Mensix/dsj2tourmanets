@@ -3,8 +3,8 @@
     "start": "ts-node ./src/index.ts"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^0.35.1",
-    "eslint": "^8.33.0",
+    "@antfu/eslint-config": "^0.35.2",
+    "eslint": "^8.34.0",
     "ts-node": "^10.9.1"
   },
   "dependencies": {
@@ -12,6 +12,6 @@
     "date-fns": "^2.29.3",
     "discord.js": "^14.7.1",
     "dotenv": "^16.0.3",
-    "ofetch": "^1.0.0"
+    "ofetch": "^1.0.1"
   }
 }
